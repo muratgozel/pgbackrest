@@ -4,6 +4,8 @@ apt install -y pgbackrest
 
 mkdir -p -m 770 /var/log/pgbackrest
 chown postgres:postgres /var/log/pgbackrest
+mkdir -p -m 770 /var/spool/pgbackrest
+chown -R postgres:postgres /var/spool/pgbackrest
 mkdir -p /etc/pgbackrest
 mkdir -p /etc/pgbackrest/conf.d
 touch /etc/pgbackrest/pgbackrest.conf
