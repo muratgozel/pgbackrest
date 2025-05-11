@@ -8,7 +8,25 @@ mkdir -p -m 770 /var/spool/pgbackrest
 chown -R postgres:postgres /var/spool/pgbackrest
 mkdir -p /etc/pgbackrest
 mkdir -p /etc/pgbackrest/conf.d
-touch /etc/pgbackrest/pgbackrest.conf
+
+if [ ! -f /etc/pgbackrest/pgbackrest.conf ]; then
+  export CIPHER_PASS=$(openssl rand -base64 48)
+  
+  missing_env_vars=""
+
+  for var in S3_BUCKET S3_ENDPOINT S3_KEY S3_SECRET S3_REGION; do
+    if [ -z "${!var+x}" ]; then
+      missing_env_vars="$missing_env_vars $var"
+    fi
+  done
+  if [ -n "$missing_env_vars" ]; then
+    echo "Missing environment variables: $missing_env_vars"
+    exit 1
+  fi
+  
+  sudo cat /etc/pgbackrest/pgbackrest.conf.template | envsubst | sudo tee /etc/pgbackrest/pgbackrest.conf > /dev/null
+fi
+
 chmod 640 /etc/pgbackrest/pgbackrest.conf
 chown postgres:postgres /etc/pgbackrest/pgbackrest.conf
 sudo -u postgres pgbackrest
