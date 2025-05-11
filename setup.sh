@@ -37,6 +37,7 @@ echo "archive_command = 'pgbackrest --stanza=app archive-push %p'" >> $pgconf
 
 sudo -u postgres pgbackrest --stanza=app --pg1-port=5432 --log-level-console=info stanza-create
 service postgresql restart
+sleep 6
 sudo -u postgres pgbackrest --stanza=app --pg1-port=5432 --log-level-console=info check
 pgbackrest_check_result=$?
 
