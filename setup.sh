@@ -10,11 +10,13 @@ mkdir -p /etc/pgbackrest
 mkdir -p /etc/pgbackrest/conf.d
 
 if [ ! -f /etc/pgbackrest/pgbackrest.conf ]; then
-  export CIPHER_PASS=$(openssl rand -base64 48)
+  if [ -f ./.env ]; then
+    eval "$(./shdotenv -e ./.env || echo "exit $?")"
+  fi
   
   missing_env_vars=""
 
-  for var in S3_BUCKET S3_ENDPOINT S3_KEY S3_SECRET S3_REGION; do
+  for var in CIPHER_PASS S3_BUCKET S3_ENDPOINT S3_KEY S3_SECRET S3_REGION; do
     if [ -z "${!var+x}" ]; then
       missing_env_vars="$missing_env_vars $var"
     fi
