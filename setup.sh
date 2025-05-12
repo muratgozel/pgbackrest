@@ -37,10 +37,10 @@ pgconf=/etc/postgresql/17/main/postgresql.conf
 echo "archive_mode = on" >> $pgconf
 echo "archive_command = 'pgbackrest --stanza=app archive-push %p'" >> $pgconf
 
-sudo -u postgres pgbackrest --stanza=app --pg1-port=5432 --log-level-console=info stanza-create
+sudo -u postgres pgbackrest --stanza=app --pg1-port=5432 --log-level-console=info --config=/etc/pgbackrest/pgbackrest.conf stanza-create
 service postgresql restart
 sleep 6
-sudo -u postgres pgbackrest --stanza=app --pg1-port=5432 --log-level-console=info check
+sudo -u postgres pgbackrest --stanza=app --pg1-port=5432 --log-level-console=info --config=/etc/pgbackrest/pgbackrest.conf check
 pgbackrest_check_result=$?
 
 if [ $pgbackrest_check_result -ne 0 ]; then
