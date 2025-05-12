@@ -13,7 +13,7 @@ if [ ! -f /etc/pgbackrest/pgbackrest.conf ]; then
   if [ -f ./.env ]; then
     eval "$(./shdotenv -e ./.env || echo "exit $?")"
   fi
-  
+
   missing_env_vars=""
 
   for var in CIPHER_PASS S3_BUCKET S3_ENDPOINT S3_KEY S3_SECRET S3_REGION; do
@@ -25,8 +25,8 @@ if [ ! -f /etc/pgbackrest/pgbackrest.conf ]; then
     echo "Missing environment variables: $missing_env_vars"
     exit 1
   fi
-  
-  sudo cat /etc/pgbackrest/pgbackrest.conf.template | envsubst | sudo tee /etc/pgbackrest/pgbackrest.conf > /dev/null
+
+  sudo cat ./pgbackrest.conf.template | envsubst | sudo tee /etc/pgbackrest/pgbackrest.conf > /dev/null
 fi
 
 chmod 640 /etc/pgbackrest/pgbackrest.conf
